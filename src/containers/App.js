@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
-import Person from '../components/people/Person';
-import Error from '../components/ErrorBoundary/ErrorBoundary';
+import Store from '../components/store/Store';
+import People from '../components/people/People';
+import base from '../base';
+import MarkOut from '../components/markup/MarkOutput';
+import MarkIn from '../components/markup/MarkIput';
 
 class App extends Component {
   state = {
@@ -10,7 +13,9 @@ class App extends Component {
         { id:67, name: 'Max', age: 50 },
         { id:69, name: 'Naomi', age: 35 }
     ],
-      username: 'yoda'
+      username: 'yoda',
+      markuptext: 'Some text **with emphasis**',
+      stores: []
   }
   deleteHandler = (personNum) => {
     const people = [...this.state.people];
@@ -21,7 +26,7 @@ class App extends Component {
   }
   changeNameHandler = (e, id) => {
       const personIndx = this.state.people.findIndex((p) => {
-          return p.id == id;
+          return p.id === id;
       });
       const person  = { ...this.state.people[personIndx]};
       person.name = e.target.value;
@@ -32,14 +37,28 @@ class App extends Component {
           people: people
       });
   }
+  updateMarkUp = (e) => {
+      const content = this.state.markuptext;
+      this.setState({
+          markuptext: e.target.value
+      });
+  }
   toogleHandler = () => {
       const showThem = this.state.showPeople;
       this.setState({
           showPeople: !showThem
       })
   }
+  componentDidMount(){
+      //console.log('mounted');
+      this.ref = base.syncState('stores',{
+          context: this,
+          state: 'stores'
+      })
+  }
   render() {
       let people = null;
+      let store = null;
       const classes = [];
       if(this.state.people.length <=2){
           classes.push('red');
@@ -49,19 +68,25 @@ class App extends Component {
       }
 
       if(this.state.showPeople){
+          console.log(this.state.stores);
           people = (
-              <div>
-                  {this.state.people.map((person, index) => {
-                      return <Person love ={person.name} change={(event) => this.changeNameHandler(event, person.id)} click={this.deleteHandler.bind(this, index)} key={person.id} />
-                  })}
-              </div>
+              <People
+                  people={this.state.people}
+                  clicked={this.deleteHandler}
+                  changed={this.changeNameHandler}
+              />
           );
       }
     return (
       <div className="App">
-        <h1 className={classes.join(' ')}>Hi</h1>
+        <h1 className={classes.join(' ')}>People App</h1>
           {people}
         <button onClick={this.toogleHandler}>Toggle</button>
+          <div className="markit">
+              <MarkIn text={this.state.markuptext} changed={this.updateMarkUp} />
+              <MarkOut text={this.state.markuptext}/>
+          </div>
+
       </div>
     );
   }

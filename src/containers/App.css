@@ -1,7 +1,12 @@
 .App {
   text-align: center;
 }
-
+.App H1{
+  background: deepskyblue;
+  color: blue;
+  text-align: center;
+  padding: 10px;
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
@@ -35,6 +40,27 @@ button {
 .bold{
   font-weight: 800;
   color: blue;
+}
+div.markit{
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns:1fr 1fr;
+  column-gap: 20px;
+}
+div.markit .box{
+  border:1px solid #ccc;
+  min-height: 50vh;
+  text-align: center;
+  position: relative;
+}
+div.markit textarea{
+  width: 100%;
+  height: 100%;
+  border: none;
+  position: absolute;
+  top:0;
+  left: 0;
 }
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
